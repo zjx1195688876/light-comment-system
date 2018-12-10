@@ -1,8 +1,8 @@
-const merge = require('webpack-merge')
-const nodeExternals = require('webpack-node-externals')
+const merge = require('webpack-merge');
+const nodeExternals = require('webpack-node-externals');
 const path = require('path');
-const baseConfig = require('./webpack.base.config.js')
-const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+const baseConfig = require('./webpack.base.config.js');
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin');
 
 const ROOT_PATH = path.resolve(__dirname, '../');
 

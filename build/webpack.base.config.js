@@ -15,11 +15,11 @@ module.exports = {
         publicPath: '/dist/',
         filename: '[name].[chunkhash].js'
     },
-    // resolve: {
-    //     alias: {
-    //       'public': path.resolve(__dirname, '../public')
-    //     }
-    // },
+    resolve: {
+        alias: {
+          '@': path.resolve(__dirname, '../src')
+        }
+    },
     module: {
         noParse: /es6-promise\.js$/, // avoid webpack shimming process
         rules: [
@@ -49,6 +49,10 @@ module.exports = {
                 }
             },
             {
+                test: /\.(woff|woff2|eot|ttf|otf)$/,
+                loader: 'file-loader'
+            },
+            {
                 // 用于js import 'item.css';的用法
                 test: /\.css$/,
                 // 重要：使用 vue-style-loader 替代 style-loader
@@ -58,6 +62,14 @@ module.exports = {
                     fallback: 'vue-style-loader'
                     })
                 : ['vue-style-loader', 'css-loader']
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                    'sass-loader'
+                ]
             }
         ]
     },

@@ -1,7 +1,7 @@
-const merge = require('webpack-merge')
+const merge = require('webpack-merge');
 const path = require('path');
-const baseConfig = require('./webpack.base.config.js')
-const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
+const baseConfig = require('./webpack.base.config.js');
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 
 const ROOT_PATH = path.resolve(__dirname, '../');
 
