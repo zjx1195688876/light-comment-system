@@ -1,9 +1,15 @@
 <template>
-    <div>{{ count }}</div>
+    <div>首页 {{ count }}</div>
 </template>
 
 <script>
+import titleMixin from '../mixin/title-mixin';
+
 export default {
+    mixins: [titleMixin],
+    title () {
+        return 'Index'
+    },
     asyncData ({ store, route }) {
         // 触发 action 后，会返回 Promise
         return store.dispatch('inc')
