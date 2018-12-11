@@ -8,10 +8,11 @@
         </header>
         <main>
             <div class="comment-item">
-                <p>1. 总的来说，我认为课程符合我的期望。</p>
+                <p>1. 总体来说，我认为课程符合我的期望。</p>
                 <light-radio-group
                     :radio-name="'comment1'"
                     :radio-list="radioList"
+                    @change="onChange"
                 />
             </div>
             <div class="comment-item">
@@ -19,6 +20,7 @@
                 <light-radio-group
                     :radio-name="'comment2'"
                     :radio-list="radioList"
+                    @change="onChange"
                 />
             </div>
             <div class="comment-item">
@@ -26,6 +28,7 @@
                 <light-radio-group
                     :radio-name="'comment3'"
                     :radio-list="radioList"
+                    @change="onChange"
                 />
             </div>
             <div class="comment-item">
@@ -33,6 +36,7 @@
                 <light-radio-group
                     :radio-name="'comment4'"
                     :radio-list="radioList"
+                    @change="onChange"
                 />
             </div>
             <div class="comment-item">
@@ -40,6 +44,7 @@
                 <light-radio-group
                     :radio-name="'comment5'"
                     :radio-list="radioList"
+                    @change="onChange"
                 />
             </div>
             <div class="comment-item">
@@ -59,15 +64,21 @@
                 ></el-input>
             </div>
             <div class="comment-item">
-                <p>8. 我愿意推荐此分享给其他同事或朋友。</p>
+                <p>8. 我愿意推荐此分享给其他同事或朋友。（5分表示最同意，0分表示完全不同意）</p>
                 <light-radio-group
                     :radio-name="'comment8'"
                     :radio-list="radioList"
+                    @change="onChange"
                 />
             </div>
         </main>
         <footer>
-            <el-button type="primary">提 交</el-button>
+            <el-button
+                type="primary"
+                @click="onSubmit"
+            >
+                提 交
+            </el-button>
         </footer>
     </light-card>
 </template>
@@ -91,15 +102,23 @@ export default {
             shareName: 'Koa && Egg',
             userName: '张金新(墨影)',
             radioList: [
-                { index: 1, name: '1分' },
-                { index: 2, name: '2分' },
-                { index: 3, name: '3分' },
-                { index: 4, name: '4分' },
-                { index: 5, name: '5分' }
+                { _index: 1, name: '1分' },
+                { _index: 2, name: '2分' },
+                { _index: 3, name: '3分' },
+                { _index: 4, name: '4分' },
+                { _index: 5, name: '5分' }
             ],
             advantage: '',
             improvement: ''
         };
+    },
+    methods: {
+        onChange (obj) {
+            console.log(obj);
+        },
+        onSubmit () {
+
+        }
     }
 }
 </script>

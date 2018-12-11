@@ -4,7 +4,13 @@ const app = new Koa();
 const fs = require('fs');
 const path = require('path');
 const { createBundleRenderer } = require('vue-server-renderer');
-const router = koaRouter();
+const bodyParser = require('koa-bodyparser');
+const pageRouter = koaRouter();
+const ApiRouter = require('./src/app/routers/index'); // ajax的路由
+
+
+// 使用ctx.body解析中间件, 这样才能通过ctx.request.body拿到post请求的入参
+app.use(bodyParser());
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -33,9 +39,9 @@ const renderData = (ctx, renderer) => {
 let renderer;
 if (isProd) {
     // 生产环境直接获取
-    const bundle = require('./dist/client/vue-ssr-server-bundle.json');
-    const template = fs.readFileSync(resolve('./dist/client/index.html'), 'utf-8');
-    const clientManifest = require('../../public/client/vue-ssr-client-manifest.json');
+    const bundle = require('./dist/vue-ssr-server-bundle.json');
+    const template = fs.readFileSync(resolve('./dist/index.html'), 'utf-8');
+    const clientManifest = require('./dist/vue-ssr-client-manifest.json');
     renderer = createRenderer(bundle, {
         template,
         clientManifest
@@ -50,7 +56,7 @@ if (isProd) {
 }
 
 
-router.get('*', async (ctx, next) => {
+pageRouter.get('*', async (ctx, next) => {
     // 提示webpack还在工作
     if (!renderer) {
         ctx.type = 'html';
@@ -80,6 +86,7 @@ router.get('*', async (ctx, next) => {
     }
 })
 
-app.use(router.routes()).use(router.allowedMethods());
+app.use(pageRouter.routes()).use(pageRouter.allowedMethods());
+app.use(ApiRouter.routes()).use(ApiRouter.allowedMethods());
 
 app.listen(3000);

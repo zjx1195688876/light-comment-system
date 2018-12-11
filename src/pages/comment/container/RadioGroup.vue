@@ -1,9 +1,12 @@
 <template>
-    <el-radio-group v-model="name">
+    <el-radio-group
+        v-model="label"
+        @change="onChange"
+    >
         <el-radio
             v-for="(item, index) in radioList"
             :key="index"
-            :label="index"
+            :label="item._index"
         >
         {{ item.name }}
     </el-radio>
@@ -27,8 +30,16 @@ export default {
     },
     data() {
         return {
-            name: this.radioName
+            label: 0
         };
+    },
+    methods: {
+        onChange ($event) {
+            this.$emit('change', {
+                radioName: this.radioName,
+                label: $event
+            });
+        }
     }
 }
 </script>
