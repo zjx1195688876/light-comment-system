@@ -2,15 +2,24 @@
     <el-card class="item">
         <div slot="header" class="clearfix">
             <span class="title">{{ item.title }}</span>
-            <el-button 
-                style="float: right; padding: 2px 0" type="text"
+        </div>
+        <div class="desc">
+            {{ item.desc }}
+        </div>
+        <div class="btn-box">
+            <el-button
+                type="primary"
+                size="mini"
                 @click="onWatch(item)"
             >
                 查看
             </el-button>
-        </div>
-        <div class="desc">
-            {{ item.desc }}
+            <el-button
+                size="mini"
+                @click="onWatch(item)"
+            >
+                分享
+            </el-button>
         </div>
     </el-card>
 </template>
@@ -44,8 +53,9 @@ export default {
     width: 30%;
     .title {
         display: inline-block;
-        max-width: 250px;
+        width: 100%;
         font-size: 14px;
+        line-height: 1;
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
@@ -59,6 +69,10 @@ export default {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
+    }
+    .btn-box {
+        margin: 30px 0 0;
+        text-align: right;
     }
 }
 .clearfix:before, .clearfix:after {

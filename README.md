@@ -11,7 +11,13 @@ a light comment system by ssr
 # 可能遇到的踩坑
 1. 一个页面多次访问之后，state一直增加导致内存泄漏，这个时候只需每个路由建一个 key 即可，例详情页只建立一个 detail 的 key，请求的数据赋值给 detail 即可 [https://segmentfault.com/a/1190000015440082]
 
+2. 为什么不能用router.push({ path: '/'});来跳转？
+
 # 踩坑
-2. // 使用ctx.body解析中间件, 这样才能通过ctx.request.body拿到post请求的入参
+1. // 使用ctx.body解析中间件, 这样才能通过ctx.request.body拿到post请求的入参
    const bodyParser = require('koa-bodyparser');
    app.use(bodyParser());
+
+2. API的router要放在pageRouter前面，不然SSR的ajax请求会先走进pageRouter里面
+   app.use(ApiRouter.routes()).use(ApiRouter.allowedMethods());
+   app.use(pageRouter.routes()).use(pageRouter.allowedMethods());

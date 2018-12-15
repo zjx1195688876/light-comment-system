@@ -81,7 +81,7 @@ export default {
                 })
                 .then(res => {
                     if (res && res.data && res.data.code === 200) {
-                        // this.showMessage('注册成功，请登录');
+                        location.href="/";
                     } else {
                         this.showMessage('登录失败，请重试', 'warning');
                     }

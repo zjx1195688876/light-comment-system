@@ -4,7 +4,9 @@
             <router-link to="/">首页</router-link>
             <router-link to="/detail">详情页</router-link>
         </nav> -->
-        <router-view></router-view>
+        <transition name="fade">
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 

@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <light-header></light-header>
+        <light-header
+            :userName="pageData.userName"
+        ></light-header>
         <div class="create-box">
             <el-button
                 type="primary"
@@ -14,7 +16,7 @@
             :extend-style="'margin: 20px auto; width: 1180px;'"
         >
             <item
-                v-for="(item, index) in list"
+                v-for="(item, index) in pageData.shareList"
                 :key="index"
                 :item="item"
                 :_index="index"
@@ -25,6 +27,7 @@
 
 <script>
 import axios from 'axios';
+import shareListStoreModule from '@/store/modules/share-list';
 import titleMixin from '@/mixin/title-mixin';
 import Header from '@/components/Header.vue';
 import Card from '@/components/Card.vue';
@@ -42,20 +45,23 @@ export default {
     title () {
         return '个人分享列表';
     },
-    data () {
-        return {
-            list: [
-                { title: '分享分享1分享1分享1分享11', desc: '分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述', shareId: 1 },
-                { title: '分享1分享1分享1分享1分享1', desc: '分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述',shareId: 2 },
-                { title: '分享1分享1分享1分享1', desc: '分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述', shareId: 3 },
-                { title: '分享1分享1分享1分享1分享1分享1分享1分享1', desc: '分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述', shareId: 4 },
-                { title: '分享1分享1分享1分享1', desc: '分享描述分享描述分享描述分享描述分享描述分享描述分享描述分享描述', shareId: 5 },
-            ]
+    asyncData ({ store }) {
+        store.registerModule('list', shareListStoreModule)
+        return store.dispatch('list/getPageData')
+    },
+    // 重要信息：当多次访问路由时，
+    // 避免在客户端重复注册模块。
+    destroyed () {
+        this.$store.unregisterModule('list')
+    },
+    computed: {
+        pageData () {
+            return this.$store.state.list.pageData
         }
     },
     methods: {
         onCreate () {
-            console.log('创建分享');
+            location.href = '/share-create';
         }
     }
 }

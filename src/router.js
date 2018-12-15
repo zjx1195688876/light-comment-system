@@ -10,19 +10,39 @@ const ShareList = () => import('./pages/user/share-list/index.vue');
 const ShareItem = () => import('./pages/user/share-item/index.vue');
 const ShareCreate = () => import('./pages/user/share-create/index.vue');
 
+const routes = [
+    {
+        path: '/',
+        component: ShareList
+    },
+    { 
+        path: '/detail', 
+        component: Detail 
+    },
+    { 
+        path: '/comment',
+        component: Comment 
+    },
+    { 
+        path: '/login', 
+        component: Login
+    },
+    // { path: '/share-list', component: ShareList },
+    { 
+        path: '/share-item', 
+        component: ShareItem 
+    },
+    { 
+        path: '/share-create', 
+        component: ShareCreate 
+    }
+];
+
 Vue.use(Router);
 
 export function createRouter () {
     return new Router({
         mode: 'history',
-        routes: [
-            { path: '/', component: Index },
-            { path: '/detail', component: Detail },
-            { path: '/comment', component: Comment },
-            { path: '/login', component: Login },
-            { path: '/share-list', component: ShareList },
-            { path: '/share-item', component: ShareItem },
-            { path: '/share-create', component: ShareCreate }
-        ]
-    })
+        routes
+    });
 };

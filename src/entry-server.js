@@ -9,9 +9,13 @@ export default context => {
     // 就已经准备就绪。
     return new Promise((resolve, reject) => {
         const { app, router, store } = createApp();
+        let url = '/login';
+        if (context.session.userName) { // 登录情况下
+            url = context.url;
+        }
 
         // 设置服务器端 router 的位置
-        router.push(context.url);
+        router.push(url);
 
         // 等到 router 将可能的异步组件和钩子函数解析完
         router.onReady(() => {

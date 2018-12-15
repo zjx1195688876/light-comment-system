@@ -3,6 +3,8 @@ const User = require('../controllers/user');
 
 const routers = router
     .post('/login.json', User.login)
-    .post('/register.json', User.register);
+    .post('/logout.json', User.logout)
+    .post('/register.json', User.register)
+    .get('/getUser.json', User.getUser);
 
 module.exports = routers;

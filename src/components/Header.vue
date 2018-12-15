@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     name: 'LightHeader',
     props: {
@@ -22,7 +24,17 @@ export default {
     },
     methods: {
         onLogout () {
-             console.log('退出登录');
+            axios.post('/user/logout.json')
+            .then(res => {
+                if (res && res.data && res.data.code === 200) {
+                    location.href="/login";
+                } else {
+                    this.showMessage('退出失败，请重试', 'warning');
+                }
+            })
+            .catch(err => {
+                this.showMessage('退出失败，请重试', 'warning');
+            });
         }
     }
 }

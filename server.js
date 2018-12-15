@@ -5,10 +5,20 @@ const fs = require('fs');
 const path = require('path');
 const { createBundleRenderer } = require('vue-server-renderer');
 const bodyParser = require('koa-bodyparser');
-const pageRouter = koaRouter();
+const session=require('koa-session')
 const ApiRouter = require('./src/app/routers/index'); // ajax的路由
+const pageRouter = koaRouter();
 
+app.keys = ['this is session key'];
 
+// 使用koa-session存储用户信息
+app.use(session({
+    key: 'user', /** cookie的名称 */
+    maxAge: 1000 * 60 * 60 * 24 * 10, /** (number) maxAge in ms (default is 1 days)，cookie的过期时间，这里表示10天 */
+    overwrite: true, /** (boolean) can overwrite or not (default true) */
+    httpOnly: true, /** (boolean) httpOnly or not (default true) */
+    signed: true, /** (boolean) signed or not (default true) */
+},app));
 // 使用ctx.body解析中间件, 这样才能通过ctx.request.body拿到post请求的入参
 app.use(bodyParser());
 
@@ -24,7 +34,8 @@ const createRenderer = (bundle, options) => {
 
 const renderData = (ctx, renderer) => {
     const context = {
-        url: ctx.url
+        url: ctx.url,
+        session: ctx.session || {}
     };
     return new Promise( (resolve, reject) => {
         renderer.renderToString(context, (err, html) => {
@@ -86,7 +97,7 @@ pageRouter.get('*', async (ctx, next) => {
     }
 })
 
-app.use(pageRouter.routes()).use(pageRouter.allowedMethods());
 app.use(ApiRouter.routes()).use(ApiRouter.allowedMethods());
+app.use(pageRouter.routes()).use(pageRouter.allowedMethods());
 
 app.listen(3000);

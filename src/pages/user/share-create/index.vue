@@ -67,7 +67,53 @@ export default {
     },
     methods: {
         onSubmit () {
-            console.log('创建分享');
+            const bool = this.checkCreateShareData();
+            if (bool && !ApiLock) {
+                ApiLock = true;
+                axios.post('/share/create.json', {
+                    title: this.form.title,
+                    desc: this.form.desc,
+                    lineDate: this.form.time ? this.form.time : this.form.date
+                })
+                .then(res => {
+                    if (res && res.data && res.data.code === 200) {
+                        location.href="/";
+                    } else {
+                        this.showMessage('创建失败，请重试', 'warning');
+                    }
+                    ApiLock = false;
+                })
+                .catch(err => {
+                    this.showMessage('创建失败，请重试', 'warning');
+                    ApiLock = false;
+                });
+            }
+        },
+        checkCreateShareData () {
+            let message = '';
+            let type = 'warning';
+            if (!this.form.title) {
+                message = '请输入分享主题';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.form.desc) {
+                message = '请输入分享描述';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.form.date) {
+                message = '请选择评价截止时间';
+                this.showMessage(message, type);
+                return false;
+            }
+            return true;
+        },
+        showMessage (message ,type = "success") {
+            this.$message({
+                message,
+                type
+            });
         }
     }
 }
