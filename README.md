@@ -1,6 +1,25 @@
 # light-comment-system
 a light comment system by ssr
 
+# 开发准备
+1. 安装Node
+2. 安装npm
+3. 安装mongoDB，创建数据库名为: light-comment-system, 端口号: 27017
+
+# 启动应用
+```
+1. 本地开发
+    git clone git@github.com:zjx1195688876/light-comment-system.git
+
+    npm i
+
+    启动数据库
+
+    npm run dev 启动应用
+
+    访问http://127.0.0.1:3000
+```
+
 # 参考资料
 1. 降级处理：https://juejin.im/post/5b8e64c5f265da43481607a1
 2. egg ssr：https://www.yuque.com/easy-team/egg-vue/node
@@ -9,7 +28,7 @@ a light comment system by ssr
 1. 组件级别cache
 2. 降级为前端渲染的方案
 3. elementUI的组件可以按需引入
-4. 注册增加查找逻辑，数据找得到直接提示去登录，在前端判断，先查找userName再注册user
+4. 注册增加查找逻辑，数据找得到直接提示去登录，在前端判断，先查找userName再注册user【完成】
 5. 【重要】登录逻辑还未完成（包括cookie）【完成】
 
 # 可能遇到的踩坑

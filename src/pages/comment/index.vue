@@ -1,86 +1,95 @@
 <template>
-    <light-card
-        :extend-style="'margin: 30px auto; width: 1180px;'"
-    >
-        <header>
-            <h1>{{ pageData.shareInfo.title }}</h1>
-            <span> -- {{ pageData.userInfo.userName }}</span>
-        </header>
-        <main>
-            <div class="comment-item">
-                <p>1. 总体来说，我认为课程符合我的期望。</p>
-                <light-radio-group
-                    :radio-name="'comment1'"
-                    :radio-list="radioList"
-                    @change="onChange"
-                />
-            </div>
-            <div class="comment-item">
-                <p>2. 课程教材（如PPT、道具）上的知识点逻辑清晰、内容详实。</p>
-                <light-radio-group
-                    :radio-name="'comment2'"
-                    :radio-list="radioList"
-                    @change="onChange"
-                />
-            </div>
-            <div class="comment-item">
-                <p>3. 课程中使用的案例能帮助我理解课程内容。</p>
-                <light-radio-group
-                    :radio-name="'comment3'"
-                    :radio-list="radioList"
-                    @change="onChange"
-                />
-            </div>
-            <div class="comment-item">
-                <p>4. 课程内容对我的工作确实有帮助，能直接应用到我的实际工作中。</p>
-                <light-radio-group
-                    :radio-name="'comment4'"
-                    :radio-list="radioList"
-                    @change="onChange"
-                />
-            </div>
-            <div class="comment-item">
-                <p>5. 讲师在此领域有丰富的相关专业知识与背景。</p>
-                <light-radio-group
-                    :radio-name="'comment5'"
-                    :radio-list="radioList"
-                    @change="onChange"
-                />
-            </div>
-            <div class="comment-item">
-                <p>6. 您觉得此次分享最有收获，最有用的知识点或案例是哪些？</p>
-                <el-input
-                    type="textarea"
-                    :rows=4
-                    v-model="advantage"
-                ></el-input>
-            </div>
-            <div class="comment-item">
-                <p>7. 您觉得此次分享还有哪些可以改进的地方？</p>
-                <el-input
-                    type="textarea"
-                    :rows=4
-                    v-model="improvement"
-                ></el-input>
-            </div>
-            <div class="comment-item">
-                <p>8. 我愿意推荐此分享给其他同事或朋友。（5分表示最同意，0分表示完全不同意）</p>
-                <light-radio-group
-                    :radio-name="'comment8'"
-                    :radio-list="radioList"
-                    @change="onChange"
-                />
-            </div>
-        </main>
-        <footer>
-            <el-button
-                type="primary"
-                @click="onSubmit"
-            >
-                提 交
-            </el-button>
-        </footer>
-    </light-card>
+    <div>
+        <div
+            v-if="pageData.hide"
+            style="margin: 100px auto; text-align: center;"
+        >
+            技术分享评价已截止
+        </div>
+        <light-card
+            v-else
+            :extend-style="'margin: 30px auto; width: 1180px;'"
+        >
+            <header>
+                <h1>{{ pageData.shareInfo.title }}</h1>
+                <span> -- {{ pageData.userInfo.userName }}</span>
+            </header>
+            <main>
+                <div class="comment-item">
+                    <p>1. 总体来说，我认为课程符合我的期望。</p>
+                    <light-radio-group
+                        :radio-name="'comment1'"
+                        :radio-list="radioList"
+                        @change="onChange"
+                    />
+                </div>
+                <div class="comment-item">
+                    <p>2. 课程教材（如PPT、道具）上的知识点逻辑清晰、内容详实。</p>
+                    <light-radio-group
+                        :radio-name="'comment2'"
+                        :radio-list="radioList"
+                        @change="onChange"
+                    />
+                </div>
+                <div class="comment-item">
+                    <p>3. 课程中使用的案例能帮助我理解课程内容。</p>
+                    <light-radio-group
+                        :radio-name="'comment3'"
+                        :radio-list="radioList"
+                        @change="onChange"
+                    />
+                </div>
+                <div class="comment-item">
+                    <p>4. 课程内容对我的工作确实有帮助，能直接应用到我的实际工作中。</p>
+                    <light-radio-group
+                        :radio-name="'comment4'"
+                        :radio-list="radioList"
+                        @change="onChange"
+                    />
+                </div>
+                <div class="comment-item">
+                    <p>5. 讲师在此领域有丰富的相关专业知识与背景。</p>
+                    <light-radio-group
+                        :radio-name="'comment5'"
+                        :radio-list="radioList"
+                        @change="onChange"
+                    />
+                </div>
+                <div class="comment-item">
+                    <p>6. 您觉得此次分享最有收获，最有用的知识点或案例是哪些？</p>
+                    <el-input
+                        type="textarea"
+                        :rows=4
+                        v-model="advantage"
+                    ></el-input>
+                </div>
+                <div class="comment-item">
+                    <p>7. 您觉得此次分享还有哪些可以改进的地方？</p>
+                    <el-input
+                        type="textarea"
+                        :rows=4
+                        v-model="improvement"
+                    ></el-input>
+                </div>
+                <div class="comment-item">
+                    <p>8. 我愿意推荐此分享给其他同事或朋友。（5分表示最同意，0分表示完全不同意）</p>
+                    <light-radio-group
+                        :radio-name="'comment8'"
+                        :radio-list="radioList"
+                        @change="onChange"
+                    />
+                </div>
+            </main>
+            <footer>
+                <el-button
+                    type="primary"
+                    @click="onSubmit"
+                >
+                    提 交
+                </el-button>
+            </footer>
+        </light-card>
+    </div>
 </template>
 
 <script>
@@ -113,7 +122,9 @@ export default {
     },
     computed: {
         pageData () {
-            return this.$store.state.comment.pageData;
+            const data = this.$store.state.comment.pageData;
+            data.hide = new Date() > new Date(data.shareInfo.lineDate);
+            return data;
         }
     },
     data () {
