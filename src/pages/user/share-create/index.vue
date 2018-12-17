@@ -47,6 +47,7 @@ import Card from '@/components/Card.vue';
 let ApiLock = false;
 
 export default {
+    name: 'shareCreate',
     mixins: [titleMixin],
     components: {
         'light-card': Card,

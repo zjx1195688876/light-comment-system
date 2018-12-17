@@ -54,6 +54,7 @@ import Card from '@/components/Card.vue';
 let ApiLock = false;
 
 export default {
+    name: 'login',
     mixins: [titleMixin],
     components: {
         'light-card': Card

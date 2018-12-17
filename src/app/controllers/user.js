@@ -83,12 +83,18 @@ module.exports = {
         console.log('ctx.session: ', ctx.session);
         ctx.body = {
             code: 200,
-            data: {
+            body: {
                 userId: ctx.session.userId || '',
                 userName: ctx.session.userName || ''
             },
             success: true,
             message: '获取成功'
         };
+    },
+    async search (ctx) {
+        const { userId } = ctx.query;
+        let conditon = {'userId': userId};
+        let cb = User.findOne(conditon, opts);
+        await commonReturn(cb, ctx);
     }
 };

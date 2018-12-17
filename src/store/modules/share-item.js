@@ -1,27 +1,13 @@
 import axios from 'axios';
 
 const origin = 'http://127.0.0.1:3000';
-const searchUserById = (config) => {
-    return axios({
-        method: 'GET',
-        url: `${origin}/user/search.json`,
-        timeout: 5000,
-        params: {
-            userId: config.userId || ''
-        },
-        headers: {
-            cookie: config.cookie || ''
-        }
-    });
-};
 
-const searchShareById = (config) => {
+const getDetailList = (config) => {
     return axios({
         method: 'GET',
-        url: `${origin}/share/search.json`,
+        url: `${origin}/detail/list.json`,
         timeout: 5000,
         params: {
-            userId: config.userId || '',
             shareId: config.shareId || ''
         },
         headers: {
@@ -37,18 +23,17 @@ export default {
         pageData: {}
     }),
     actions: {
+        // getPageData: ({ commit }) => commit('GET_PAGE_DATA', pageData)
         getPageData ({ commit }, config = {}) {
-            return axios.all([searchUserById(config), searchShareById(config)])
-                .then(axios.spread((userRes, shareRes) => {
-                    let userData = userRes.data;
-                    let shareData = shareRes.data;
-                    if (userData && userData.code === 200 && shareData && shareData.code === 200) {
+            return getDetailList(config)
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
                         commit('GET_PAGE_DATA', {
-                            userInfo: userData.body || {},
-                            shareInfo: shareData.body || {}
+                            detailList: data.body || []
                         })
                     }
-                }))
+                })
                 .catch(err => {
                     console.log(err);
                 });

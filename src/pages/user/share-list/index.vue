@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <light-header
-            :userName="pageData.userName"
+            :userName="pageData.userInfo.userName"
         ></light-header>
         <div class="create-box">
             <el-button
@@ -36,6 +36,7 @@ import Item from './components/Item.vue';
 let ApiLock = false;
 
 export default {
+    name: 'shareList',
     mixins: [titleMixin],
     components: {
         'light-card': Card,
@@ -45,9 +46,9 @@ export default {
     title () {
         return '个人分享列表';
     },
-    asyncData ({ store }) {
+    asyncData ({ store, route, config}) {
         store.registerModule('list', shareListStoreModule)
-        return store.dispatch('list/getPageData')
+        return store.dispatch('list/getPageData', config)
     },
     // 重要信息：当多次访问路由时，
     // 避免在客户端重复注册模块。
@@ -56,6 +57,7 @@ export default {
     },
     computed: {
         pageData () {
+            // console.log('pageData: ' ,this.$store.state.list.pageData);
             return this.$store.state.list.pageData
         }
     },

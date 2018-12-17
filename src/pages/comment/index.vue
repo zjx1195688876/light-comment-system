@@ -3,8 +3,8 @@
         :extend-style="'margin: 30px auto; width: 1180px;'"
     >
         <header>
-            <h1>{{ shareName }}</h1>
-            <span> -- {{ userName }}</span>
+            <h1>{{ pageData.shareInfo.title }}</h1>
+            <span> -- {{ pageData.userInfo.userName }}</span>
         </header>
         <main>
             <div class="comment-item">
@@ -84,11 +84,16 @@
 </template>
 
 <script>
+import axios from 'axios';
+import commentStoreModule from '@/store/modules/comment';
 import titleMixin from '@/mixin/title-mixin';
 import Card from '@/components/Card.vue';
 import RadioGroup from './container/RadioGroup.vue';
 
+let ApiLock = false;
+
 export default {
+    name: 'comment',
     mixins: [titleMixin],
     components: {
         'light-card': Card,
@@ -97,10 +102,22 @@ export default {
     title () {
         return '分享评价';
     },
+    asyncData ({ store, route, config}) {
+        store.registerModule('comment', commentStoreModule)
+        return store.dispatch('comment/getPageData', config)
+    },
+    // 重要信息：当多次访问路由时，
+    // 避免在客户端重复注册模块。
+    destroyed () {
+        this.$store.unregisterModule('comment')
+    },
+    computed: {
+        pageData () {
+            return this.$store.state.comment.pageData;
+        }
+    },
     data () {
         return {
-            shareName: 'Koa && Egg',
-            userName: '张金新(墨影)',
             radioList: [
                 { _index: 1, name: '1分' },
                 { _index: 2, name: '2分' },
@@ -108,16 +125,123 @@ export default {
                 { _index: 4, name: '4分' },
                 { _index: 5, name: '5分' }
             ],
+            comment1: 0,
+            comment2: 0,
+            comment3: 0,
+            comment4: 0,
+            comment5: 0,
             advantage: '',
-            improvement: ''
+            improvement: '',
+            comment8: 0,
+            userId: '',
+            shareId: ''
         };
+    },
+    // location 需要在客户端钩子函数里做，否则服务端渲染报错
+    mounted () {
+        this.userId = this.getSearchKey('userId');
+        this.shareId = this.getSearchKey('shareId');
     },
     methods: {
         onChange (obj) {
-            console.log(obj);
+            this[obj.radioName] = obj.label;
         },
         onSubmit () {
+            const bool = this.checkSubmitData();
+            if (bool && !ApiLock) {
+                ApiLock = true;
+                axios.post('/detail/create.json', {
+                    comment1: this.comment1,
+                    comment2: this.comment2,
+                    comment3: this.comment3,
+                    comment4: this.comment4,
+                    comment5: this.comment5,
+                    advantage: this.advantage,
+                    improvement: this.improvement,
+                    comment8: this.comment8,
+                    userId: this.userId,
+                    shareId: this.shareId
+                })
+                .then(res => {
+                    if (res && res.data && res.data.code === 200) {
+                        this.showMessage('提交成功');
+                        // location.href="/";
+                    } else {
+                        this.showMessage('提交失败，请重试', 'warning');
+                    }
+                    ApiLock = false;
+                })
+                .catch(err => {
+                    this.showMessage('提交失败，请重试', 'warning');
+                    ApiLock = false;
+                });
+            }
+        },
+        checkSubmitData () {
+            let message = '';
+            let type = 'warning';
+            if (!this.comment1) {
+                message = '请选择选项1';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.comment2) {
+                message = '请选择选项2';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.comment3) {
+                message = '请选择选项3';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.comment4) {
+                message = '请选择选项4';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.comment5) {
+                message = '请选择选项5';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.advantage) {
+                message = '请填写此次分享的收获';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.improvement) {
+                message = '请填写此次分享可以改进的地方';
+                this.showMessage(message, type);
+                return false;
+            }
+            if (!this.comment8) {
+                message = '请选择选项8';
+                this.showMessage(message, type);
+                return false;
+            }
+            return true;
+        },
+        showMessage (message ,type = "success") {
+            this.$message({
+                message,
+                type
+            });
+        },
+        getSearchKey (key = '') {
+            if (key) {
+                const obj = {};
+                const search = location.search.split('?')[1];
+                const arr = search.split('&');
+                arr.forEach(item => {
+                    const key = item.split('=')[0];
+                    const value = item.split('=')[1];
+                    obj[key] = value;
+                });
 
+                return obj[key] || '';
+            }
+            return '';
         }
     }
 }

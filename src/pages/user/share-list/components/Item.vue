@@ -16,7 +16,7 @@
             </el-button>
             <el-button
                 size="mini"
-                @click="onWatch(item)"
+                @click="onShare(item)"
             >
                 分享
             </el-button>
@@ -38,9 +38,12 @@ export default {
         }
     },
     methods: {
-       onWatch (item) {
-           console.log(item);
-       } 
+        onWatch (item) {
+            location.href = `/share-item?shareId=${item.shareId}`;
+        },
+        onShare (item) {
+            location.href = `/comment?userId=${item.userId}&shareId=${item.shareId}`;
+        }
     }
 }
 </script>

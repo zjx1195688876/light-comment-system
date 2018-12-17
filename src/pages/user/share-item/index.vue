@@ -4,32 +4,32 @@
         <light-card
             :extend-style="'padding: 20px; margin: 20px auto; width: 1180px;'"
         >
-           <p class="total">总体平均分： {{ totalAverage}}</p>
+           <p class="total">总体平均分： {{ pageData.totalAverage}}</p>
            <p class="item">
                 <span class="item-desc">1. 总体来说，我认为课程符合我的期望。</span>
-                <span class="item-average">(平均分：{{ comment1.average }})</span>
+                <span class="item-average">(平均分：{{ pageData.comment1.average }})</span>
            </p>
            <p class="item">
                 <span class="item-desc">2. 课程教材（如PPT、道具）上的知识点逻辑清晰、内容详实。</span>
-                <span class="item-average">(平均分：{{ comment2.average }})</span>
+                <span class="item-average">(平均分：{{ pageData.comment2.average }})</span>
            </p>
            <p class="item">
                 <span class="item-desc">3. 课程中使用的案例能帮助我理解课程内容。</span>
-                <span class="item-average">(平均分：{{ comment3.average }})</span>
+                <span class="item-average">(平均分：{{ pageData.comment3.average }})</span>
            </p>
            <p class="item">
                 <span class="item-desc">4. 课程内容对我的工作确实有帮助，能直接应用到我的实际工作中。</span>
-                <span class="item-average">(平均分：{{ comment4.average }})</span>
+                <span class="item-average">(平均分：{{ pageData.comment4.average }})</span>
            </p>
            <p class="item">
                 <span class="item-desc">5. 讲师在此领域有丰富的相关专业知识与背景。</span>
-                <span class="item-average">(平均分：{{ comment5.average }})</span>
+                <span class="item-average">(平均分：{{ pageData.comment5.average }})</span>
            </p>
            <p class="item">
                 <span class="item-desc">6. 您觉得此次分享最有收获，最有用的知识点或案例是哪些？</span>
                 <span
                     class="advantage-item"
-                    v-for="(advantage ,index) in advantageList"
+                    v-for="(advantage ,index) in pageData.advantageList"
                     :key="index"
                 >
                     - {{ advantage }}
@@ -39,7 +39,7 @@
                 <span class="item-desc">7. 您觉得此次分享还有哪些可以改进的地方？</span>
                 <span
                     class="improvement-item"
-                    v-for="(improvement ,index) in improvementList"
+                    v-for="(improvement ,index) in pageData.improvementList"
                     :key="index"
                 >
                     - {{ improvement }}
@@ -47,7 +47,7 @@
            </p>
            <p class="item">
                 <span class="item-desc">8. 我愿意推荐此分享给其他同事或朋友。（5分表示最同意，0分表示完全不同意）</span>
-                <span class="item-average">(平均分：{{ comment8.average }})</span>
+                <span class="item-average">(平均分：{{ pageData.comment8.average }})</span>
            </p>
         </light-card>
     </div>
@@ -55,6 +55,7 @@
 
 <script>
 import axios from 'axios';
+import shareItemStoreModule from '@/store/modules/share-item';
 import titleMixin from '@/mixin/title-mixin';
 import Header from '@/components/Header.vue';
 import Card from '@/components/Card.vue';
@@ -62,6 +63,7 @@ import Card from '@/components/Card.vue';
 let ApiLock = false;
 
 export default {
+    name: 'shareItem',
     mixins: [titleMixin],
     components: {
         'light-card': Card,
@@ -70,39 +72,78 @@ export default {
     title () {
         return '分享的主题';
     },
-    data () {
-        return {
-            totalAverage: 4.70,
-            comment1: {
-                average: 4.71
-            },
-            comment2: {
-                average: 4.71
-            },
-            comment3: {
-                average: 4.71
-            },
-            comment4: {
-                average: 4.71
-            },
-            comment5: {
-                average: 4.71
-            },
-            advantageList: [
-                '优点1优点1优点1优点1优点1',
-                '优点1优点1优点1优点1',
-                '优点1优点1优点1优点1优点1优点1优点1优点1优点1优点1优点1',
-                '优点1优点1优点1优点1优点1优点1优点1优点1优点1优点1'
-            ],
-            improvementList: [
-                '可改进的点1可改进的点1可改进的点1可改进的点1可改进的点1',
-                '可改进的点1可改进的点1可改进的点1可改进的点1',
-                '可改进的点1可改进的点1可改进的点1',
-            ],
-            comment8: {
-                average: 4.71
+    asyncData ({ store, route, config}) {
+        store.registerModule('item', shareItemStoreModule)
+        return store.dispatch('item/getPageData', config)
+    },
+    // 重要信息：当多次访问路由时，
+    // 避免在客户端重复注册模块。
+    destroyed () {
+        this.$store.unregisterModule('item')
+    },
+    computed: {
+        pageData () {
+            const detailList = this.$store.state.item.pageData.detailList || [];
+            const data = {
+                totalAverage: '暂无',
+                comment1: {
+                    total: 0,
+                    average: '暂无'
+                },
+                comment2: {
+                    total: 0,
+                    average: '暂无'
+                },
+                comment3: {
+                    total: 0,
+                    average: '暂无'
+                },
+                comment4: {
+                    total: 0,
+                    average: '暂无'
+                },
+                comment5: {
+                    total: 0,
+                    average: '暂无'
+                },
+                advantageList: [],
+                improvementList: [],
+                comment8: {
+                    total: 0,
+                    average: '暂无'
+                }
+            };
+            if (detailList.length > 0) {
+                const len = detailList.length;
+                for (let i = 0; i < len; i++) {
+                    data.comment1.total += detailList[i].comment1;
+                    data.comment2.total += detailList[i].comment2;
+                    data.comment3.total += detailList[i].comment3;
+                    data.comment4.total += detailList[i].comment4;
+                    data.comment5.total += detailList[i].comment5;
+                    data.advantageList.push(detailList[i].advantage);
+                    data.improvementList.push(detailList[i].improvement);
+                    data.comment8.total += detailList[i].comment8;
+                }
+                data.comment1.average = parseFloat(data.comment1.total / len).toFixed(2);
+                data.comment2.average = parseFloat(data.comment2.total / len).toFixed(2);
+                data.comment3.average = parseFloat(data.comment3.total / len).toFixed(2);
+                data.comment4.average = parseFloat(data.comment4.total / len).toFixed(2);
+                data.comment5.average = parseFloat(data.comment5.total / len).toFixed(2);
+                data.comment8.average = parseFloat(data.comment8.total / len).toFixed(2);
+                data.totalAverage = parseFloat(
+                    (
+                        Number(data.comment1.average)
+                        + Number(data.comment2.average)
+                        + Number(data.comment3.average)
+                        + Number(data.comment4.average)
+                        + Number(data.comment5.average)
+                        + Number(data.comment8.average)
+                    ) / 6
+                ).toFixed(2);
             }
-        };
+            return data;
+        }
     }
 }
 </script>

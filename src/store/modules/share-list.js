@@ -1,32 +1,45 @@
 import axios from 'axios';
 
 const origin = 'http://127.0.0.1:3000';
-const getUserInfo = () => {
-    return axios.get(`${origin}/user/getUser.json`);
+const getUserInfo = (config) => {
+    return axios({
+        method: 'GET',
+        url: `${origin}/user/getUser.json`,
+        timeout: 5000,
+        headers: {
+            cookie: config.cookie || 'mock cookie'
+        }
+    });
 };
 
-const getShareList = () => {
-    return axios.get(`${origin}/share/list.json`);
+const getShareList = (config) => {
+    return axios({
+        method: 'GET',
+        url: `${origin}/share/list.json`,
+        timeout: 5000,
+        headers: {
+            cookie: config.cookie || 'mock cookie'
+        }
+    });
 };
 
 export default {
     namespaced: true,
+    // 要注意, state 一定要用函数返回值来初始化 state, 不然会导致所有用户共用 state
     state: () => ({
         pageData: {}
     }),
     actions: {
         // getPageData: ({ commit }) => commit('GET_PAGE_DATA', pageData)
-        getPageData ({ commit }) {
-            axios.all([getUserInfo(), getShareList()])
+        getPageData ({ commit }, config = {}) {
+            return axios.all([getUserInfo(config), getShareList(config)])
                 .then(axios.spread((userRes, listRes) => {
-                    console.log('userRes: ', userRes.data);
-                    console.log('listRes: ', listRes.data);
                     let userData = userRes.data;
                     let listData = listRes.data;
                     if (userData && userData.code === 200 && listData && listData.code === 200) {
                         commit('GET_PAGE_DATA', {
-                            userInfo: userData.data || {},
-                            shareList: listData.data || {}
+                            userInfo: userData.body || {},
+                            shareList: listData.body || {}
                         })
                     }
                 }))
@@ -38,7 +51,6 @@ export default {
     mutations: {
         // GET_PAGE_DATA: state => state.pageData
         GET_PAGE_DATA (state, pageData) {
-            console.log(pageData);
             state.pageData = pageData;
         }
     }

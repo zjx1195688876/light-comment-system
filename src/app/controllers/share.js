@@ -32,7 +32,6 @@ module.exports = {
         await commonReturn(cb, ctx);
     },
     async list (ctx) {
-        // console.log('ctx: ', ctx);
         const userId = ctx.session.userId || '';
         const sort = {'date': -1};        // 排序（按时间倒序）
         const skipnum = 0;   // 跳过数
@@ -41,4 +40,10 @@ module.exports = {
         cb = Share.find(option, opts).skip(skipnum).sort(sort).exec();
         await commonReturn(cb, ctx);
     },
+    async search (ctx) {
+        const { userId, shareId } = ctx.query;
+        let conditon = {'userId': userId, 'shareId': shareId};
+        let cb = Share.findOne(conditon, opts);
+        await commonReturn(cb, ctx);
+    }
 };

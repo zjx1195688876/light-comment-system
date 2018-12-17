@@ -35,7 +35,8 @@ const createRenderer = (bundle, options) => {
 const renderData = (ctx, renderer) => {
     const context = {
         url: ctx.url,
-        session: ctx.session || {}
+        session: ctx.session || {},
+        cookie: ctx.request.header.cookie || ''
     };
     return new Promise( (resolve, reject) => {
         renderer.renderToString(context, (err, html) => {
