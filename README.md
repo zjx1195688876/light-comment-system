@@ -69,7 +69,7 @@ a light comment system by ssr
         return store.dispatch('list/getPageData', { cookie })
     },
    ```
-   4.修改store:
+   4. 修改store:
    ```javascript
    actions: {
         // getPageData: ({ commit }) => commit('GET_PAGE_DATA', pageData)
