@@ -25,7 +25,7 @@ a light comment system by ssr
 2. egg ssr：https://www.yuque.com/easy-team/egg-vue/node
 
 # 需要做的点
-1. 组件级别cache
+1. 组件级别cache【完成】
 2. 降级为前端渲染的方案
 3. elementUI的组件可以按需引入
 4. 注册增加查找逻辑，数据找得到直接提示去登录，在前端判断，先查找userName再注册user【完成】
