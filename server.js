@@ -6,6 +6,7 @@ const path = require('path');
 const { createBundleRenderer } = require('vue-server-renderer');
 const bodyParser = require('koa-bodyparser');
 const session=require('koa-session')
+const LRU = require('lru-cache')
 const ApiRouter = require('./src/app/routers/index'); // ajax的路由
 const pageRouter = koaRouter();
 
@@ -56,13 +57,22 @@ if (isProd) {
     const clientManifest = require('./dist/vue-ssr-client-manifest.json');
     renderer = createRenderer(bundle, {
         template,
-        clientManifest
+        clientManifest,
+        cache: LRU({
+            max: 1000,
+            maxAge: 1000 * 60 * 15
+        })
     });
 
 } else { // 开发环境
     require('./build/setup-dev-server.js')(app, (bundle, options) => {
         console.log('bundle callback..');
-        renderer = createRenderer(bundle, options);
+        renderer = createRenderer(bundle, Object.assign({}, options, {
+            cache: LRU({
+                max: 1000,
+                maxAge: 1000 * 60 * 15
+            })
+        }));
         console.log(renderer);
     });
 }

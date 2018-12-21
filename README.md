@@ -88,3 +88,8 @@ a light comment system by ssr
         }
     },
    ```
+
+
+> cd /usr/local
+> export PATH=/usr/local/mongodb/bin:$PATH
+> mongod

@@ -83,9 +83,10 @@
             <footer>
                 <el-button
                     type="primary"
+                    :disabled="disabled"
                     @click="onSubmit"
                 >
-                    提 交
+                    {{ txt }}
                 </el-button>
             </footer>
         </light-card>
@@ -145,7 +146,9 @@ export default {
             improvement: '',
             comment8: 0,
             userId: '',
-            shareId: ''
+            shareId: '',
+            disabled: false,
+            txt: '提 交'
         };
     },
     // location 需要在客户端钩子函数里做，否则服务端渲染报错
@@ -175,6 +178,8 @@ export default {
                 })
                 .then(res => {
                     if (res && res.data && res.data.code === 200) {
+                        this.disabled = true;
+                        this.txt = '已提交';
                         this.showMessage('提交成功');
                         // location.href="/";
                     } else {

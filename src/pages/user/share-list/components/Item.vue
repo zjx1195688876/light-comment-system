@@ -37,6 +37,7 @@ export default {
             default: {}
         }
     },
+    serverCacheKey: props => props.item.shareId,
     methods: {
         onWatch (item) {
             location.href = `/share-item?shareId=${item.shareId}`;

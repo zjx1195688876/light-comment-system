@@ -26,7 +26,7 @@ export default context => {
     return new Promise((resolve, reject) => {
         const { app, router, store } = createApp();
         let url = '/login';
-        if (context.session.userName) { // 登录情况下
+        if (context.url.indexOf('comment') > 0 || context.session.userName) { // 不需要登录信息 || 登录情况下
             url = context.url;
         }
 
