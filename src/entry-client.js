@@ -1,12 +1,12 @@
 // 仅运行于浏览器
 // 客户端 entry 只需创建应用程序，并且将其挂载到 DOM 中
 import { createApp } from './app';
-import { createStore } from './store';
+// import { createStore } from './store';
 
 // 客户端特定引导逻辑……
-const store = createStore();
+// const store = createStore();
 
-const { app, router } = createApp(store)
+const { app, router, store } = createApp(document.cookie || '')
 
 if (window.__INITIAL_STATE__) {
     store.replaceState(window.__INITIAL_STATE__);

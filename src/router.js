@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
+import _ from './utils';
 
 // 代码分割
 const Index = () => import('./pages/Index.vue');
@@ -13,11 +14,14 @@ const ShareCreate = () => import('./pages/user/share-create/index.vue');
 const routes = [
     {
         path: '/',
-        component: ShareList
+        component: ShareList,
+        meta: {
+            requireAuth: true
+        }
     },
     { 
         path: '/detail', 
-        component: Detail 
+        component: Detail
     },
     { 
         path: '/comment',
@@ -30,19 +34,41 @@ const routes = [
     // { path: '/share-list', component: ShareList },
     { 
         path: '/share-item', 
-        component: ShareItem 
+        component: ShareItem,
+        meta: {
+            requireAuth: true
+        }
     },
     { 
         path: '/share-create', 
-        component: ShareCreate 
+        component: ShareCreate,
+        meta: {
+            requireAuth: true
+        }
     }
 ];
 
 Vue.use(Router);
 
-export function createRouter () {
-    return new Router({
+export function createRouter (cookie) {
+    const router = new Router({
         mode: 'history',
         routes
     });
+
+    router.beforeEach((to, from, next) => {
+        if (to.meta.requireAuth) {
+            if (_.getCookie(cookie, 'user')) {
+                next();
+            } else {
+                next({
+                    path: '/login'
+                });
+            }
+        } else {
+            next();
+        }
+    });
+
+    return router;
 };

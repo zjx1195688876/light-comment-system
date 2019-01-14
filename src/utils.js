@@ -1,7 +1,7 @@
 const _ = {
-    getCookie (name) {
+    getCookie (cookie, name) {
         let res = null;
-        document.cookie.split(';').forEach(item => {
+        cookie.split(';').forEach(item => {
             let itemArr = item.split('=');
             if (itemArr[0].trim() === name.trim()) {
                 res = itemArr[1];

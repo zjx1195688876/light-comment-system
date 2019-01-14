@@ -59,7 +59,7 @@ export default {
         display: inline-block;
         width: 100%;
         font-size: 14px;
-        line-height: 1;
+        line-height: 15px;
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;

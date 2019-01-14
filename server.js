@@ -13,11 +13,12 @@ const pageRouter = koaRouter();
 app.keys = ['this is session key'];
 
 // 使用koa-session存储用户信息
+// 此时，为了在导航守卫能获取到用户登录的cookie信息，做路由重定向，现在只能httpOnly: false
 app.use(session({
     key: 'user', /** cookie的名称 */
     maxAge: 1000 * 60 * 60 * 24 * 10, /** (number) maxAge in ms (default is 1 days)，cookie的过期时间，这里表示10天 */
     overwrite: true, /** (boolean) can overwrite or not (default true) */
-    httpOnly: true, /** (boolean) httpOnly or not (default true) */
+    httpOnly: false, /** (boolean) httpOnly or not (default true) */
     signed: true, /** (boolean) signed or not (default true) */
 },app));
 // 使用ctx.body解析中间件, 这样才能通过ctx.request.body拿到post请求的入参
