@@ -1,10 +1,12 @@
 // 仅运行于浏览器
 // 客户端 entry 只需创建应用程序，并且将其挂载到 DOM 中
 import { createApp } from './app';
+import { createStore } from './store';
 
 // 客户端特定引导逻辑……
+const store = createStore();
 
-const { app, router, store } = createApp();
+const { app, router } = createApp(store)
 
 if (window.__INITIAL_STATE__) {
     store.replaceState(window.__INITIAL_STATE__);
@@ -16,6 +18,7 @@ router.onReady(() => {
     // 在初始路由 resolve 后执行，
     // 以便我们不会二次预取(double-fetch)已有的数据。
     // 使用 `router.beforeResolve()`，以便确保所有异步组件都 resolve。
+    // entry-client.js router后执行
     router.beforeResolve((to, from, next) => {
         const matched = router.getMatchedComponents(to);
         const prevMatched = router.getMatchedComponents(from);

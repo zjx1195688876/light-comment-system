@@ -32,17 +32,15 @@ export default {
     actions: {
         // getPageData: ({ commit }) => commit('GET_PAGE_DATA', pageData)
         getPageData ({ commit }, config = {}) {
-            return axios.all([getUserInfo(config), getShareList(config)])
-                .then(axios.spread((userRes, listRes) => {
-                    let userData = userRes.data;
-                    let listData = listRes.data;
-                    if (userData && userData.code === 200 && listData && listData.code === 200) {
+            return getShareList(config)
+                .then(res => {
+                    let data = res.data;
+                    if (data && data.code === 200) {
                         commit('GET_PAGE_DATA', {
-                            userInfo: userData.body || {},
-                            shareList: listData.body || {}
+                            shareList: data.body || []
                         })
                     }
-                }))
+                })
                 .catch(err => {
                     console.log(err);
                 });

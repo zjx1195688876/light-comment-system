@@ -2,6 +2,7 @@
 // 服务器 entry 使用 default export 导出函数，并在每次渲染中重复调用此函数
 // 此文件负责：1. 服务器端路由匹配(server-side route matching); 2. 数据预取逻辑(data pre-fetching logic)。
 import { createApp } from './app';
+import { createStore } from './store';
 
 const get  = (url = '', key = '') => {
     if (url && key && url.indexOf('?') > -1) {
@@ -24,16 +25,22 @@ export default context => {
     // 以便服务器能够等待所有的内容在渲染前，
     // 就已经准备就绪。
     return new Promise((resolve, reject) => {
-        const { app, router, store } = createApp();
-        let url = '/login';
-        if (context.url.indexOf('comment') > 0 || context.session.userName) { // 不需要登录信息 || 登录情况下
-            url = context.url;
-        }
+        const store = createStore();
+        const { app, router } = createApp(store);
+        const url = context.url || '/';
+        // const { app, router, store } = createApp();
+        // let url = '/login';
+        // if (context.url.indexOf('comment') > 0 || context.session.userName) { // 不需要登录信息 || 登录情况下
+        //     url = context.url;
+        // }
+
+        // console.log('url: ', url);
 
         // 设置服务器端 router 的位置
         router.push(url);
 
         // 等到 router 将可能的异步组件和钩子函数解析完
+        // entry-server.js router先执行
         router.onReady(() => {
 
             const matchedComponents = router.getMatchedComponents();

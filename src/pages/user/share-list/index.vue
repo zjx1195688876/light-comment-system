@@ -48,7 +48,10 @@ export default {
     },
     asyncData ({ store, route, config}) {
         store.registerModule('list', shareListStoreModule)
-        return store.dispatch('list/getPageData', config)
+        return Promise.all([
+            store.dispatch('getUserInfo', config),
+            store.dispatch('list/getPageData', config)
+        ]);
     },
     // 重要信息：当多次访问路由时，
     // 避免在客户端重复注册模块。
@@ -57,8 +60,11 @@ export default {
     },
     computed: {
         pageData () {
-            // console.log('pageData: ' ,this.$store.state.list.pageData);
-            return this.$store.state.list.pageData
+            // console.log('this.$store: ', this.$store);
+            return {
+                userInfo:  this.$store.state.pageData.userInfo,
+                shareList: this.$store.state.list.pageData.shareList
+            }
         }
     },
     methods: {

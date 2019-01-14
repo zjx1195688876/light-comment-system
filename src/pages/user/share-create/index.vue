@@ -1,6 +1,8 @@
 <template>
     <div class="container">
-        <light-header></light-header>
+        <light-header
+            :userName="pageData.userInfo.userName"
+        ></light-header>
         <light-card
             :extend-style="'padding: 20px; margin: 20px auto; width: 980px;'"
         >
@@ -56,6 +58,9 @@ export default {
     title () {
         return '创建分享';
     },
+    asyncData ({ store, route, config}) {
+        return store.dispatch('getUserInfo', config);
+    },
     data () {
         return {
             form: {
@@ -65,6 +70,13 @@ export default {
                 time: ''
             }
         };
+    },
+    computed: {
+        pageData () {
+            return {
+                userInfo:  this.$store.state.pageData.userInfo
+            }
+        }
     },
     methods: {
         onSubmit () {

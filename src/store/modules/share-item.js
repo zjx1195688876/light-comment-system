@@ -2,6 +2,22 @@ import axios from 'axios';
 
 const origin = 'http://127.0.0.1:3000';
 
+
+const searchShareById = (config) => {
+    return axios({
+        method: 'GET',
+        url: `${origin}/share/search.json`,
+        timeout: 5000,
+        params: {
+            // userId: config.userId || '',
+            shareId: config.shareId || ''
+        },
+        headers: {
+            cookie: config.cookie || ''
+        }
+    });
+};
+
 const getDetailList = (config) => {
     return axios({
         method: 'GET',
@@ -23,17 +39,18 @@ export default {
         pageData: {}
     }),
     actions: {
-        // getPageData: ({ commit }) => commit('GET_PAGE_DATA', pageData)
         getPageData ({ commit }, config = {}) {
-            return getDetailList(config)
-                .then(res => {
-                    let data = res.data;
-                    if (data && data.code === 200) {
+            return axios.all([searchShareById(config), getDetailList(config)])
+                .then(axios.spread((shareRes, listRes) => {
+                    let shareData = shareRes.data;
+                    let listData = listRes.data;
+                    if (shareData && shareData.code === 200 && listData && listData.code === 200) {
                         commit('GET_PAGE_DATA', {
-                            detailList: data.body || []
+                            shareInfo: shareData.body || {},
+                            detailList: listData.body || {}
                         })
                     }
-                })
+                }))
                 .catch(err => {
                     console.log(err);
                 });

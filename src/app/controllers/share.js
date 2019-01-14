@@ -42,7 +42,7 @@ module.exports = {
     },
     async search (ctx) {
         const { userId, shareId } = ctx.query;
-        let conditon = {'userId': userId, 'shareId': shareId};
+        let conditon = {'shareId': shareId};
         let cb = Share.findOne(conditon, opts);
         await commonReturn(cb, ctx);
     }

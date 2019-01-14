@@ -21,7 +21,7 @@ const searchShareById = (config) => {
         url: `${origin}/share/search.json`,
         timeout: 5000,
         params: {
-            userId: config.userId || '',
+            // userId: config.userId || '',
             shareId: config.shareId || ''
         },
         headers: {
