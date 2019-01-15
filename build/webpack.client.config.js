@@ -21,9 +21,14 @@ module.exports = merge(baseConfig, {
             name: true,
             cacheGroups: {
                 vendors: {
-                    test: /[\\/]node_modules[\\/]/,
+                    test: /node_modules\/element-ui/,
                     priority: -10,
                     name: "vendors",
+                },
+                common: {
+                    test: /node_modules/,
+                    priority: -11,
+                    name: "common",
                 },
                 default: {
                     minChunks: 2,

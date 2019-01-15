@@ -12,7 +12,7 @@ module.exports = {
         : '#cheap-module-source-map',
     output: {
         path: path.resolve(__dirname, '../dist'),
-        publicPath: '/dist/',
+        publicPath: '/',
         filename: '[name].[chunkhash].js'
     },
     resolve: {
@@ -80,17 +80,18 @@ module.exports = {
     plugins: isProd
         ? [
             new VueLoaderPlugin(),
-            new webpack.optimize.UglifyJsPlugin({
-                compress: { warnings: false }
-            }),
             new webpack.optimize.ModuleConcatenationPlugin(),
             new ExtractTextPlugin({
-                filename: 'common.[chunkhash].css'
+                filename: 'common.[chunkhash].css',
+                allChunks: true
             })
         ]
         : [
             new VueLoaderPlugin(),
             new FriendlyErrorsPlugin()
         ],
+    optimization: {
+        minimize: isProd
+    },
     mode: isProd ? 'production' : 'development'
 };

@@ -45,7 +45,34 @@ a light comment system by ssr
    app.use(ApiRouter.routes()).use(ApiRouter.allowedMethods());
    app.use(pageRouter.routes()).use(pageRouter.allowedMethods());
 
-3. 服务端axios的cookie传递： [参考资料：https://segmentfault.com/a/1190000010225972]
+3. 页面重定向，再router的导航守卫判断跳转逻辑（注：此处通过cookie的方式判断用户是否登录，在entry-client.js和entry-server.js均需要传入cookie，因此采用的cookie为httpOnly：false的方式，不确定会不会有更好的方式）
+```javascript
+export function createRouter (cookie) {
+    const router = new Router({
+        mode: 'history',
+        routes
+    });
+
+    router.beforeEach((to, from, next) => {
+        if (to.meta.requireAuth) {
+            if (_.getCookie(cookie, 'user')) {
+                next();
+            } else {
+                next({
+                    path: '/login'
+                });
+            }
+        } else {
+            next();
+        }
+    });
+
+    return router;
+};
+```
+
+
+4. 服务端axios的cookie传递： [参考资料：https://segmentfault.com/a/1190000010225972]
    1. 修改server.js:
    ```javascript
     const context = {

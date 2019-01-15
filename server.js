@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const { createBundleRenderer } = require('vue-server-renderer');
 const bodyParser = require('koa-bodyparser');
+const serve = require('koa-static');
 const session=require('koa-session')
 const LRU = require('lru-cache')
 const ApiRouter = require('./src/app/routers/index'); // ajax的路由
@@ -21,6 +22,10 @@ app.use(session({
     httpOnly: false, /** (boolean) httpOnly or not (default true) */
     signed: true, /** (boolean) signed or not (default true) */
 },app));
+// 解析静态资源
+app.use(serve(
+    path.join(__dirname, './dist')
+));
 // 使用ctx.body解析中间件, 这样才能通过ctx.request.body拿到post请求的入参
 app.use(bodyParser());
 
@@ -54,7 +59,7 @@ let renderer;
 if (isProd) {
     // 生产环境直接获取
     const bundle = require('./dist/vue-ssr-server-bundle.json');
-    const template = fs.readFileSync(resolve('./dist/index.html'), 'utf-8');
+    const template = fs.readFileSync(resolve('./src/template/index.html'), 'utf-8');
     const clientManifest = require('./dist/vue-ssr-client-manifest.json');
     renderer = createRenderer(bundle, {
         template,
